@@ -1,0 +1,45 @@
+Step 1 : Open firewall configuration tool
+> cmd and run as administrator
+>netsh advfirewall commands
+
+
+
+Step 2 : List current firewall rules
+> cmd- netsh advfirewall firewall show rule name=all | more
+
+>while typing this command,it shows all exixsting rules in pages so we can scroll down for all the rules 
+>Useful for baseline before changes
+( Screenshot:- netsh advfirewall firewall show rule name=all | more )
+
+
+
+Step 3: Add a rule to block inbound traffic on port 23 (Telnet)
+>cmd- netsh advfirewall firewall add rule name="Block telnet 23" dir=in action=block protocol=TCP localport=23
+
+>dir=in -> inbound traffic 
+>action=block -> deny packets
+>localport=23 -> filter telnet port
+(Screenshot:-Add a rule to block inbound traffic on port 23 (Telnet))
+
+
+
+Step 4: Test the rule locally
+>cmd- Test-NetConnection -ComputerName 127.0.0.1 -Port 23
+
+> If it's succeded : False -> rule is blocking 
+( Screenshot:- Test the rule locally )
+
+
+
+Step 5: Remove the exixsting test block rule
+
+>cmd- netsh advfirewall firewall delete rule name="Block telnet 23" protocol=TCP localport=23
+
+>It's restore orginal firewall state.
+( Screenshot:- Remove the test block rule )
+
+
+
+Summarize how the firewall filters traffics
+
+A firewall firstly examines network traffic and ccompare it with its rules. If traffic matches with allw rule, it passes .if it matches a block/deny rule, it's dropped . rules can filter by direction ( inbound /Outbound),(TCP-Transmission Control Protocol/UDP- User Datagram Protocol),port no:,Ip addresses or application.
